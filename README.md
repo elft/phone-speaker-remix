@@ -45,7 +45,7 @@ The before clip is the `0:09` to `0:41` section from `Skull_Crush.mp3`. The afte
 
 ## Add Visuals
 
-Want a cool reactive visual to go with your social clip? Check out [vvavy.io](https://vvavy.io), real-time audio reactive software for making visuals that move with your music.
+Want a cool reactive visual to go with your social clip? Check out [vvavy.io](https://vvavy.io?utm_source=phone-speaker-remix&utm_medium=referral&utm_campaign=social-audio-remix), real-time audio reactive software for making visuals that move with your music.
 
 ## How It Works
 
