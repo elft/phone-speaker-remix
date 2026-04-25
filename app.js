@@ -734,6 +734,27 @@ function invalidateProcessedRender() {
   drawIdleWaveform();
 }
 
+function loadDecodedBuffer(decoded, fileName, clipStart = 0, clipLength = Math.min(30, Math.max(1, decoded.duration))) {
+  stopPlayback();
+  revokeDownloadUrls();
+  state.processedBuffer = null;
+  state.fileName = fileName;
+  state.originalBuffer = decoded;
+  els.fileName.textContent = fileName;
+  els.durationText.textContent = secondsToClock(decoded.duration);
+  els.clipStart.value = clamp(clipStart, 0, Math.max(0, decoded.duration - 0.25)).toString();
+  els.clipLength.value = Math.min(clipLength, Math.max(0.25, decoded.duration - Number(els.clipStart.value))).toString();
+  updateClipBounds();
+  const originalStats = analyzeChannels(bufferToChannels(decoded));
+  els.originalStats.textContent = formatStats(originalStats);
+  els.processedStats.textContent = "Peak -- / Loudness --";
+  els.processButton.disabled = false;
+  els.playOriginal.disabled = false;
+  els.playProcessed.disabled = true;
+  updateMp3Availability();
+  drawWaveform(decoded);
+}
+
 async function handleUpload(file) {
   if (!file) return;
   const ctx = getAudioContext();
@@ -744,20 +765,7 @@ async function handleUpload(file) {
   els.fileName.textContent = "Decoding...";
   const arrayBuffer = await file.arrayBuffer();
   const decoded = await ctx.decodeAudioData(arrayBuffer.slice(0));
-  state.originalBuffer = decoded;
-  els.fileName.textContent = file.name;
-  els.durationText.textContent = secondsToClock(decoded.duration);
-  els.clipStart.value = "0";
-  els.clipLength.value = Math.min(30, Math.max(1, decoded.duration)).toString();
-  updateClipBounds();
-  const originalStats = analyzeChannels(bufferToChannels(decoded));
-  els.originalStats.textContent = formatStats(originalStats);
-  els.processedStats.textContent = "Peak -- / Loudness --";
-  els.processButton.disabled = false;
-  els.playOriginal.disabled = false;
-  els.playProcessed.disabled = true;
-  updateMp3Availability();
-  drawWaveform(decoded);
+  loadDecodedBuffer(decoded, file.name);
 }
 
 function stopPlayback() {
