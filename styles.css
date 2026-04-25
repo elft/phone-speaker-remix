@@ -99,6 +99,17 @@ h1 {
   line-height: 1.28;
 }
 
+.visual-link {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.visual-link a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
 h2 {
   font-size: 0.96rem;
   font-weight: 750;

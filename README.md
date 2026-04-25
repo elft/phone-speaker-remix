@@ -43,6 +43,10 @@ These links should play in the browser when viewed on GitHub:
 
 The before clip is the `0:09` to `0:41` section from `Skull_Crush.mp3`. The after clip is the same section after running it through the phone-speaker remix pipeline.
 
+## Add Visuals
+
+Want a cool reactive visual to go with your social clip? Check out [vvavy.io](https://vvavy.io), real-time audio reactive software for making visuals that move with your music.
+
 ## How It Works
 
 Phones do not reproduce deep sub-bass well, so the app does not simply boost bass. Instead it:
