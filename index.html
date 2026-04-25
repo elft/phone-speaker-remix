@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phone Speaker Remix - Fix Bass and Master Audio for Social Media</title>
+    <meta name="description" content="Remix and master songs in your browser so they translate better on iPhone and Android speakers for TikTok, Instagram Reels, YouTube Shorts, and social media uploads.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#111214">
+    <meta name="application-name" content="Phone Speaker Remix">
+    <meta name="keywords" content="phone speaker remix, remix audio for iPhone speakers, Android speaker audio, social media audio mastering, TikTok audio master, Instagram Reels audio, fix bass for phone speakers, make music sound good on phone">
+    <meta property="og:title" content="Phone Speaker Remix - Master Audio for iPhone and Android Speakers">
+    <meta property="og:description" content="Upload a song, trim a clip, add phone-friendly bass harmonics, tighten the mids, and export a social-ready remix from your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Phone Speaker Remix">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Phone Speaker Remix">
+    <meta name="twitter:description" content="Fix heavy bass and master clips for phone speakers before social media uploads.">
+    <link rel="stylesheet" href="./styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Phone Speaker Remix",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web",
+        "description": "A browser-based audio remixer for making songs and clips translate better on iPhone and Android speakers for social media uploads.",
+        "featureList": [
+          "Audio upload and clip trimming",
+          "Phone speaker bass cleanup",
+          "Virtual bass harmonic generation",
+          "Mono compatibility controls",
+          "Social media loudness mastering",
+          "WAV and browser-supported MP3 export"
+        ]
+      }
+    </script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace">
+        <div class="mast">
+          <div>
+            <p class="eyebrow">Client-side master</p>
+            <h1>Phone Speaker Remix</h1>
+          </div>
+          <label class="file-button">
+            <input id="fileInput" type="file" accept="audio/*">
+            <span>Upload audio</span>
+          </label>
+        </div>
+
+        <div class="transport">
+          <canvas id="waveform" width="1200" height="260" aria-label="Audio waveform"></canvas>
+          <div class="transport-row">
+            <button id="playOriginal" class="icon-button" disabled title="Play original" aria-label="Play original">▶</button>
+            <button id="playProcessed" class="icon-button accent" disabled title="Play remixed" aria-label="Play remixed">▶</button>
+            <button id="stopPlayback" class="icon-button" disabled title="Stop" aria-label="Stop">■</button>
+            <div class="time-readout">
+              <span id="fileName">No file loaded</span>
+              <span id="durationText">0:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <section class="panel">
+            <h2>Clip</h2>
+            <label>
+              <span>Start</span>
+              <input id="clipStart" type="range" min="0" max="0" value="0" step="0.01">
+              <output id="clipStartOut">0:00</output>
+            </label>
+            <label>
+              <span>Length</span>
+              <input id="clipLength" type="range" min="1" max="60" value="30" step="0.1">
+              <output id="clipLengthOut">0:30</output>
+            </label>
+          </section>
+
+          <section class="panel">
+            <h2>Preset</h2>
+            <div class="segments" role="group" aria-label="Preset">
+              <button class="segment active" data-preset="balanced">Balanced</button>
+              <button class="segment" data-preset="tiny">Tiny</button>
+              <button class="segment" data-preset="bass">Bass</button>
+              <button class="segment" data-preset="voice">Voice</button>
+            </div>
+            <label class="toggle-row">
+              <span>Mono center</span>
+              <input id="monoToggle" type="checkbox">
+            </label>
+            <label class="toggle-row">
+              <span>Smart preserve</span>
+              <input id="smartAudioToggle" type="checkbox" checked>
+            </label>
+          </section>
+
+          <section class="panel">
+            <h2>Tone</h2>
+            <label>
+              <span>Sub cut</span>
+              <input id="highPassHz" type="range" min="70" max="180" value="130" step="1">
+              <output id="highPassHzOut">130 Hz</output>
+            </label>
+            <label>
+              <span>Virtual bass</span>
+              <input id="bassMixDb" type="range" min="-24" max="-6" value="-12" step="0.5">
+              <output id="bassMixDbOut">-12 dB</output>
+            </label>
+            <label>
+              <span>Presence</span>
+              <input id="presenceDb" type="range" min="0" max="5" value="2" step="0.1">
+              <output id="presenceDbOut">2.0 dB</output>
+            </label>
+          </section>
+
+          <section class="panel">
+            <h2>Master</h2>
+            <label>
+              <span>Loudness</span>
+              <input id="targetLufs" type="range" min="-18" max="-10" value="-14" step="0.5">
+              <output id="targetLufsOut">-14 LUFS</output>
+            </label>
+            <label>
+              <span>Ceiling</span>
+              <input id="ceilingDb" type="range" min="-3" max="-0.5" value="-1.2" step="0.1">
+              <output id="ceilingDbOut">-1.2 dB</output>
+            </label>
+            <button id="processButton" class="primary" disabled>Remix clip</button>
+          </section>
+        </div>
+
+        <div class="meters">
+          <div>
+            <span>Original</span>
+            <strong id="originalStats">Peak -- / Loudness --</strong>
+          </div>
+          <div>
+            <span>Remix</span>
+            <strong id="processedStats">Peak -- / Loudness --</strong>
+          </div>
+          <a id="downloadWav" class="download disabled" download="phone-speaker-remix.wav">Download WAV</a>
+          <button id="downloadMp3" class="download disabled" disabled>Download MP3</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
